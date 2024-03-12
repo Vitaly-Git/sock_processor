@@ -36,53 +36,48 @@ void SocketServer::gotoListenMode(){
 
 	while (true)
 	{
-		while (true)
-		{
-            if(listenerSocket < 0)
-                Utils::errorProcess("Error. Listening socket broken.", true, AppErrors::ListeningSocketBroken);
+        if(listenerSocket < 0)
+            Utils::errorProcess("Error. Listening socket broken.", true, AppErrors::ListeningSocketBroken);
 
-			FD_ZERO(&readfds);
-			FD_SET(listenerSocket, &readfds);
+        FD_ZERO(&readfds);
+        FD_SET(listenerSocket, &readfds);
 
-            nfds = std::max(nfds, listenerSocket);
-            select(nfds+1, &readfds, NULL, NULL, &timeout);
-            if (FD_ISSET(listenerSocket, &readfds) != 0)
-            {
-                // Income connection
-                FD_ZERO(&readfds);
-                break;
+        nfds = std::max(nfds, listenerSocket);
+        select(nfds+1, &readfds, NULL, NULL, &timeout);
+        if (FD_ISSET(listenerSocket, &readfds) != 0){
+
+            // Income connection
+            FD_ZERO(&readfds);
+
+            incomeSocket = accept(listenerSocket, (struct sockaddr*)&incomeAddr, &incomeAddrLen);
+            if (incomeSocket < 0){
+                Utils::errorProcess("Error. Turn on listening socket mode.", false, AppErrors::AcceptSocketError);
+            }else{
+                Utils::msgCoutEndl("Income connetion " + std::string(inet_ntoa(incomeAddr.sin_addr)) + ":" + std::to_string(incomeAddr.sin_port));
+                std::thread threadRecievDataFromSocket(SocketServer::proccessIncomeConnection, incomeSocket);
+                threadRecievDataFromSocket.detach();
             }
-		}
-
-		incomeSocket = accept(listenerSocket, (struct sockaddr*)&incomeAddr, &incomeAddrLen);
-		if (incomeSocket < 0)
-		{
-            Utils::errorProcess("Error. Turn on listening socket mode.", false, AppErrors::AcceptSocketError);
-            continue;
-		}else{
-            Utils::msgCoutEndl("Income connetion " + std::string(inet_ntoa(incomeAddr.sin_addr)) + ":" + std::to_string(incomeAddr.sin_port));
         }
-
-        // std::tr
-
-        char incomeData[1024] = {};
-        int bytesRecvd = 0;
-        bytesRecvd = recv(incomeSocket, incomeData, sizeof(incomeData), 0);
-        if(bytesRecvd > 0)
-        {
-            Utils::msgCoutEndl("Recieved data: " + std::string(incomeData));
-        }else{
-            close(incomeSocket);
-            Utils::errorProcess("Client disconnected.", false, AppErrors::ClientDisconnected);
-        }
-
-                // Отправляем данные обратно клиенту
-        //         send(*it, buf, bytes_read, 0); 
-
-
-		// SOCK_INCOMING_CONNECT sock_incoming_connect = { client_socket, listener_type };
-		// _beginthread(&thread_sock_incoming_connect_processing, 0, (void*)&sock_incoming_connect);
 	}
-
     close(listenerSocket);
 };
+
+void SocketServer::proccessIncomeConnection(int incomeSocket, bool disconectAfteRcvData = true){
+
+    char incomeData[1024] = {};
+    int bytesRecvd = 0;
+
+    bytesRecvd = recv(incomeSocket, incomeData, sizeof(incomeData), 0);
+    if(bytesRecvd > 0){
+        std::string incomeString(incomeData);
+        Utils::msgCoutEndl("Recieved data: " + incomeString);
+        Utils::writeMsgToLog(incomeString);
+        if(disconectAfteRcvData){
+            close(incomeSocket);
+            Utils::msgCoutEndl("Client disconnected.");
+        }
+    }else{
+        close(incomeSocket);
+        Utils::errorProcess("Client disconnected.", false, AppErrors::ClientDisconnected);
+    }
+}

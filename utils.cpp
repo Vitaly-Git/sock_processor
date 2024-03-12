@@ -11,17 +11,30 @@ void Utils::helpStringOut(){
 }
 
 void Utils::errorProcess(std::string errorText, bool isCritial, AppErrors appErr){
-    Utils::msgCoutEndl(errorText + "Error code: " + std::to_string((int)appErr));
+    Utils::msgCoutEndl(errorText + " Error code: " + std::to_string((int)appErr));
     if (isCritial)
         exit((int)appErr);
 }
 
 void Utils::fillLocalAddr(sockaddr_in& localAddr){
-
     // localAddr.sin_addr.s_addr = INADDR_ANY;
     char hostName[1024] = {};
     hostent *hostInfo;
     gethostname(hostName, sizeof(hostName));
     hostInfo = gethostbyname(hostName);
     std::memcpy(&localAddr.sin_addr, hostInfo->h_addr, hostInfo->h_length);
+}
+
+void Utils::writeMsgToLog(std::string msgToLog){
+    static std::mutex writeLogMutex;
+
+    std::lock_guard<std::mutex> lock(writeLogMutex);
+
+    std::ofstream fileToWrite;
+    fileToWrite.open("./log.txt", std::ios::app);
+
+    if(fileToWrite.is_open())
+        fileToWrite << msgToLog << std::endl;
+
+    fileToWrite.close();
 }

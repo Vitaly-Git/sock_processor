@@ -5,6 +5,8 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <cstring>
+#include <fstream>
+#include <mutex>
 
 enum class AppErrors{
     CreateListeningSocketError = 1,
@@ -21,4 +23,5 @@ class Utils{
         static void helpStringOut();
         static void errorProcess(std::string errorText, bool isCritial, AppErrors appErr);
         static void fillLocalAddr(sockaddr_in& localAddr);
+        static void writeMsgToLog(std::string msgToLog);
 };

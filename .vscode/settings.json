@@ -13,10 +13,6 @@
     "-Wshadow",
     "-Wformat=2",
     "-Wcast-align"
-    // ,
-    // "-Wconversion",
-    // "-Wsign-conversion",
-    // "-Wnull-dereference"
   ],
   "C_Cpp_Runner.msvcWarnings": [
     "/W4",
@@ -103,6 +99,15 @@
     "stdexcept": "cpp",
     "streambuf": "cpp",
     "typeinfo": "cpp",
-    "set": "cpp"
+    "set": "cpp",
+    "thread": "cpp",
+    "chrono": "cpp",
+    "condition_variable": "cpp",
+    "cstring": "cpp",
+    "ctime": "cpp",
+    "ratio": "cpp",
+    "mutex": "cpp",
+    "semaphore": "cpp",
+    "stop_token": "cpp"
   }
 }
