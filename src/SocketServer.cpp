@@ -45,7 +45,6 @@ void SocketServer::gotoListenMode(){
         nfds = std::max(nfds, listenerSocket);
         select(nfds+1, &readfds, NULL, NULL, &timeout);
         if (FD_ISSET(listenerSocket, &readfds) != 0){
-
             // Income connection
             FD_ZERO(&readfds);
 
@@ -54,7 +53,7 @@ void SocketServer::gotoListenMode(){
                 Utils::errorProcess("Error. Turn on listening socket mode.", false, AppErrors::AcceptSocketError);
             }else{
                 Utils::msgCoutEndl("Income connetion " + std::string(inet_ntoa(incomeAddr.sin_addr)) + ":" + std::to_string(incomeAddr.sin_port));
-                std::thread threadRecievDataFromSocket(SocketServer::proccessIncomeConnection, incomeSocket);
+                std::thread threadRecievDataFromSocket(SocketServer::proccessIncomeConnection, incomeSocket, false);
                 threadRecievDataFromSocket.detach();
             }
         }
@@ -62,7 +61,7 @@ void SocketServer::gotoListenMode(){
     close(listenerSocket);
 };
 
-void SocketServer::proccessIncomeConnection(int incomeSocket, bool disconectAfteRcvData = true){
+void SocketServer::proccessIncomeConnection(int incomeSocket, bool disconectAfteRcvData){
 
     char incomeData[1024] = {};
     int bytesRecvd = 0;

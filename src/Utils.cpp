@@ -1,4 +1,4 @@
-#include "utils.hpp"
+#include "Utils.hpp"
 
 void Utils::msgCoutEndl(std::string msg){
     std::cout<<msg<<std::endl;
@@ -37,4 +37,15 @@ void Utils::writeMsgToLog(std::string msgToLog){
         fileToWrite << msgToLog << std::endl;
 
     fileToWrite.close();
+}
+
+void Utils::getCurrentTimeFormatted(char * currentTimeBuffer){
+    timeval curTime;
+    gettimeofday(&curTime, NULL);
+    int msCount = curTime.tv_usec / 1000;
+
+    char timeBuffer [128];
+    strftime(timeBuffer, 128, "%Y-%m-%d %H:%M:%S", localtime(&curTime.tv_sec));
+
+    sprintf(currentTimeBuffer, "%s:%03d", timeBuffer, msCount);
 }

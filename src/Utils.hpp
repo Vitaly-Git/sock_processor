@@ -7,6 +7,7 @@
 #include <cstring>
 #include <fstream>
 #include <mutex>
+#include <sys/time.h>
 
 enum class AppErrors{
     CreateListeningSocketError = 1,
@@ -14,7 +15,9 @@ enum class AppErrors{
     TurnOnListeningSocketMode = 3,
     ListeningSocketBroken = 4,
     AcceptSocketError = 5,
-    ClientDisconnected = 6
+    ClientDisconnected = 6,
+    CreateLocalSocketError = 7,
+    ServerConnetionError = 8
 };
 
 class Utils{
@@ -24,4 +27,5 @@ class Utils{
         static void errorProcess(std::string errorText, bool isCritial, AppErrors appErr);
         static void fillLocalAddr(sockaddr_in& localAddr);
         static void writeMsgToLog(std::string msgToLog);
+        static void getCurrentTimeFormatted(char * outTimeBuff);
 };

@@ -16,17 +16,17 @@ int main(int argc, char* argv[]){
         
         serverPort = std::stoi(argv[2]);
         
-        SocketServer ss(serverPort);
-        ss.gotoListenMode();
+        SocketServer sockServer(serverPort);
+        sockServer.gotoListenMode();
 
     }else if(appMode == "-c" && argc == 5){
         
-        clientName = argv[1];
-        serverPort = std::stoi(argv[2]);
-        connectionPeriod = std::stoi(argv[3]);
+        clientName = argv[2];
+        serverPort = std::stoi(argv[3]);
+        connectionPeriod = std::stoi(argv[4]);
         
-        SocketClient sc(clientName, serverPort, connectionPeriod);
-        sc.connectToServer();
+        SocketClient sockClient(clientName, serverPort, connectionPeriod);
+        sockClient.sendDataToServer();
 
     }else{
         Utils::helpStringOut();
