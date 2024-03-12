@@ -5,7 +5,7 @@
       "name": "C/C++ Runner: Debug Session",
       "type": "cppdbg",
       "request": "launch",
-      "args": [],
+      "args": ["-s", "3123"],
       "stopAtEntry": false,
       "externalConsole": false,
       "cwd": "/home/vboxuser/projects/sock_processor",

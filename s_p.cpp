@@ -1,4 +1,4 @@
-#include <s_p.hpp>
+#include "s_p.hpp"
 
 int main(int argc, char* argv[]){
 
@@ -7,14 +7,14 @@ int main(int argc, char* argv[]){
         return 1;
     }
 
-    std::string appMode(argv[0]);
-    int64_t serverPort;
+    std::string appMode(argv[1]);
+    uint16_t serverPort;
     std::string clientName;
-    int64_t connectionPeriod;
+    uint16_t connectionPeriod;
 
     if(appMode == "-s" && argc == 3){
         
-        serverPort = std::stoi(argv[1]);
+        serverPort = std::stoi(argv[2]);
         
         SocketServer ss(serverPort);
         ss.gotoListenMode();

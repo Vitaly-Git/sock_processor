@@ -5,11 +5,12 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <arpa/inet.h>
-
+#include <netdb.h>
+#include <cstring>
 class SocketServer{
     private:
-        int64_t port = -1;
+        uint16_t port = -1;
     public:
-        SocketServer(int64_t serverPort):port(serverPort){};
+        SocketServer(uint16_t serverPort):port(serverPort){};
         void gotoListenMode();
 };

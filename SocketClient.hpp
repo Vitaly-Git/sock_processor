@@ -3,10 +3,10 @@
 class SocketClient{
     private:
         std::string name;
-        int64_t serverPort = -1;
-        int64_t connectionPeriod = 0;
+        uint16_t serverPort = 0;
+        uint16_t connectionPeriod = 0;
     public:
-        SocketClient(std::string clientName, int64_t srvPort, int64_t connPeriod):
+        SocketClient(std::string clientName, uint16_t srvPort, uint16_t connPeriod):
                     name(clientName), serverPort(srvPort), connectionPeriod(connPeriod){
             ;
         }

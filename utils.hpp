@@ -1,4 +1,10 @@
 #include <iostream>
+#include <netinet/in.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <cstring>
 
 enum class AppErrors{
     CreateListeningSocketError = 1,
@@ -14,4 +20,5 @@ class Utils{
         static void msgCoutEndl(std::string msg);
         static void helpStringOut();
         static void errorProcess(std::string errorText, bool isCritial, AppErrors appErr);
+        static void fillLocalAddr(sockaddr_in& localAddr);
 };
